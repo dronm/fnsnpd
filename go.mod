@@ -1,4 +1,4 @@
-module fnsnpd
+module github.com/dronm/fnsnpd
 
 go 1.21.3
 
