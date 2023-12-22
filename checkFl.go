@@ -133,7 +133,7 @@ func NewCheckFlFromFile(imgFileName string) (*CheckFl, error) {
 		runes[0] = unicode.ToUpper(runes[0])
 		name_parts[i] = string(runes)
 	}
-	check.Name = strings.Join(name_parts, " ")
+	check_name := strings.Join(name_parts, " ")
 	name_cont := lines[NAME_LN + 1]
 	matched, _ := regexp.MatchString(`^[А-Я]+$`, name_cont) //next line if all russian letters uppercase
 	if matched {
@@ -142,10 +142,17 @@ func NewCheckFlFromFile(imgFileName string) (*CheckFl, error) {
 		if len(name_cont) > 1 {
 			runes := []rune(strings.ToLower(name_cont))
 			runes[0] = unicode.ToUpper(runes[0])
-			check.Name+= " " + string(runes)
+			check_name += " " + string(runes)
 		}else{
-			check.Name+= " " + name_cont
+			check_name += " " + name_cont
 		}
+	}
+	//check for only rus letters
+	for _,lt := range []rune(check_name) {
+		if (lt < 'А' || lt > 'я') && lt != ' ' {
+			continue
+		}
+		check.Name+= string(lt)
 	}
 	
 	parse_line++ //skeep item table header
